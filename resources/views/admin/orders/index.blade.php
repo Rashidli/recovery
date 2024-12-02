@@ -19,6 +19,11 @@
             opacity: 0.5;
         }
     }
+    @keyframes shine {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
 </style>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">
@@ -325,7 +330,18 @@
                                             >
                                                 {{ $order->reference_number }}
                                             </td>
-                                            <td>{{ $order->customer_name }}</td>
+                                            <td>
+                                                {{ $order->customer_name }}
+                                                @if($isAdmin)
+                                                    @if($order->is_pending_driver_assignment)
+                                                        <!-- Shining star göstər -->
+                                                        <i class="fa fa-star text-warning" style="animation: shine 2s infinite;"></i>
+                                                    @else
+                                                        <!-- Adi star göstər -->
+                                                        <i class="fa fa-star text-muted"></i>
+                                                    @endif
+                                                @endif
+                                            </td>
                                             <td>{{ $order->phone }}</td>
                                             <td>
                                                 @foreach($order->drivers as $driver)

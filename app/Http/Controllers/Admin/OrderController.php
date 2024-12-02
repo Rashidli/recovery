@@ -99,7 +99,6 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
 
-
         $hasDriver = $order->drivers->isNotEmpty();
         $isAdmin = auth()->user()->hasRole('Admin');
         $vehicle_makes = VehicleMake::query()->with('vehicle_models')->get();
@@ -194,11 +193,11 @@ class OrderController extends Controller
             'starting_time' => 'nullable|string',
             'estimated_amt' => 'nullable|string',
             'vendor_amount' => 'nullable|numeric',
+            'vendor_name' => 'nullable|string',
             'reached_time' => 'nullable|string',
             'ending_time' => 'nullable|string',
             'status' => 'nullable',
             'driver_status' => 'nullable',
-            'vendor_name' => 'nullable',
             'file' => 'nullable|file|mimes:jpeg,png,pdf|max:2048',
         ]);
 

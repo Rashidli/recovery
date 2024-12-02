@@ -278,7 +278,7 @@
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="driver_status">Vendor name</label>
-                                        <select class="form-control js-example-basic-single" id="vendor_name" name="vendor_name">
+                                        <select class="form-control" id="vendor_name" name="vendor_name">
                                             <option value="">Select</option>
                                             @foreach($vendors as $vendor)
                                                 <option value="{{$vendor->title}}" {{ $order->vendor_name == $vendor->title ? 'selected' : '' }}>{{$vendor->title}}</option>
@@ -435,7 +435,7 @@
                             @endforeach
                         @endif
 
-                        @if($order->driver_logs->count() > 0)
+                        @if($order->driver_logs->count() > 0 && $isAdmin )
                             <div class="row">
                                 <div class="col-md-12">
                                     <h5>Driver logs</h5>
@@ -679,7 +679,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
 <!-- Tempus Dominus JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
-
 <script>
     const loggedAtPicker = new tempusDominus.TempusDominus(document.getElementById('logged_at'), {
         localization: {
