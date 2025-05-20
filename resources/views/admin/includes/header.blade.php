@@ -80,6 +80,9 @@
                             @can('list-vendors')
                                 <a href="{{route('vendors.index')}}" class="btn-info btn">Vendors</a>
                             @endcan
+                            @can('list-driver_lists')
+                                <a href="{{route('driver_lists.index')}}" class="btn-info btn">Driver list</a>
+                            @endcan
                     </div>
                 </form>
             </div>

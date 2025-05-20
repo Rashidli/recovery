@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\DriverStatus;
 use App\Http\Controllers\Controller;
+use App\Models\DriverList;
 use App\Models\FromCity;
 use App\Models\Order;
 use App\Models\ServiceCategory;
 use App\Models\ServiceCenter;
 use App\Models\VehicleMake;
 use App\Models\Vendor;
+use App\Models\ZoneCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Exports\OrdersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -40,45 +44,67 @@ class OrderController extends Controller
         if ($request->filled('phone')) {
             $query->where('phone', 'like', '%' . $request->phone . '%');
         }
+        if ($request->filled('trip_number')) {
+            $query->where('trip_number', 'like', '%' . $request->trip_number . '%');
+        }
+
+        if ($request->filled('driver_name')) {
+            $query->whereIn('id', function ($subQuery) use ($request) {
+                $subQuery->select('order_id')
+                    ->from('drivers')
+                    ->where('driver_name', 'like', "%{$request->driver_name}%");
+            });
+        }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+        if ($request->filled('vendor_name')) {
+            $query->whereNotNull('vendor_name');
         }
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
 
             $startDate = \Carbon\Carbon::parse($request->start_date);
-            $endDate = \Carbon\Carbon::parse($request->end_date);
+            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
 
             $query->whereBetween('time', [$startDate, $endDate]);
+        }
+
+        if (request()->has('driver_type') && request('driver_type') !== '') {
+            $driverType = request('driver_type');
+
+            $query->whereHas('drivers', function ($q) use ($driverType) {
+                $q->orderBy('id')->limit(1)->where('driver_ype', $driverType);
+            });
         }
 
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
         }
 
-        $query->withCount('drivers')
-            ->orderByRaw('
-            CASE
-                WHEN status IN ("canceled", "reached_cancelled") THEN 1
-                ELSE 0
-            END ASC
-        ') // Bu şərt canceled və reached_cancelled statuslarını aşağı salır
-            ->orderByRaw('drivers_count = 0 DESC') // Drivers olmayanları yuxarı çıxarır
-            ->orderBy('drivers_count', 'asc') // Daha az driver olanları növbəti
-            ->orderByDesc('created_at'); // Ən yeni tarixlər sonra
-
         $limit = $request->filled('limit') && is_numeric($request->limit) ? $request->limit : 50;
 
-        $orders = $query->paginate($limit)->withQueryString();
+        $orders = $query->orderByDesc('time')->paginate($limit)->withQueryString();
 
         $today = \Carbon\Carbon::today();
         $statusCounts = Order::whereDate('created_at', $today)
             ->select('status', \DB::raw('count(*) as count'))
             ->groupBy('status')
             ->pluck('count', 'status');
+
         $totalOrdersToday = Order::whereDate('created_at', $today)->count();
-        return view('admin.orders.index', compact('orders', 'isAdmin', 'statusCounts', 'totalOrdersToday'));
+        $vendorOrdersToday = Order::query()->whereDate('created_at', $today)
+            ->whereNotNull('vendor_name')->count();
+
+        $notice_orders = Order::query()->whereNotIn('status', ['completed', 'canceled', 'reached_cancelled'])
+            ->where('created_at', '<', \Carbon\Carbon::now()->subHours(4))
+            ->get();
+
+        return view('admin.orders.index', compact(
+            'orders', 'isAdmin', 'statusCounts',
+            'totalOrdersToday','notice_orders','vendorOrdersToday'
+        ));
     }
 
     public function create()
@@ -99,15 +125,22 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
 
+
         $hasDriver = $order->drivers->isNotEmpty();
         $isAdmin = auth()->user()->hasRole('Admin');
+        $isFatime = auth()->user()->id == 4;
+        $isSiddiq = auth()->user()->id == 9;
         $vehicle_makes = VehicleMake::query()->with('vehicle_models')->get();
         $service_categories = ServiceCategory::query()->with('types')->get();
         $from_cities = FromCity::query()->with('areas')->get();
         $serviceCenters = ServiceCenter::all();
         $vendors = Vendor::all();
+        $driver_lists = DriverList::all();
+        $zone_codes = ZoneCode::all();
         return view('admin.orders.edit', compact('order', 'serviceCenters',
-            'isAdmin', 'vehicle_makes', 'service_categories', 'from_cities', 'hasDriver','vendors'));
+            'isAdmin', 'vehicle_makes', 'service_categories', 'from_cities',
+            'hasDriver','vendors','driver_lists','zone_codes','isFatime','isSiddiq'
+        ));
     }
 
     public function store(Request $request)
@@ -181,6 +214,7 @@ class OrderController extends Controller
             'from_city' => 'nullable|string',
             'from_area' => 'nullable|string',
             'comment' => 'nullable|string',
+            'remarks' => 'nullable|string',
             'service_type' => 'nullable|string',
             'zone_codes' => 'nullable|string',
             'to_location_details' => 'nullable|string',
@@ -192,7 +226,10 @@ class OrderController extends Controller
             'waiting_charge' => 'nullable|string',
             'starting_time' => 'nullable|string',
             'estimated_amt' => 'nullable|string',
-            'vendor_amount' => 'nullable|numeric',
+            'vendor_amount' => 'required|numeric',
+            'vat' => 'nullable|numeric',
+            'total' => 'nullable|numeric',
+            'reached_cancelled_charge' => 'nullable|numeric',
             'vendor_name' => 'nullable|string',
             'reached_time' => 'nullable|string',
             'ending_time' => 'nullable|string',
@@ -341,7 +378,7 @@ class OrderController extends Controller
         $headers = [
             'Serial No',
             'Reference No',
-            'Job Open Date',
+//            'Job Open Date',
             'Status',
             'Customer Name',
             'Plate No',
@@ -360,12 +397,21 @@ class OrderController extends Controller
             'Created Date Time',
             'Job Accepted Date/Time',
             'Driver Assigned Date/Time',
-            'Driver Accepted Date/Time',
             'Reached Date/Time',
             'Completed Date/Time',
             'Driver Name',
             'Driver Phone',
             'Estimate Amount',
+            'Zone Code',
+            'Vat',
+            'Total',
+            'Waiting charge',
+            'Reached cancelled charge',
+            'Vendor amount',
+            'Remark',
+            'Trip number',
+            'Vendor name',
+            'Vendor price',
         ];
 
         $response = new StreamedResponse(function () use ($orders, $headers) {
@@ -377,7 +423,7 @@ class OrderController extends Controller
                 fputcsv($handle, [
                     $order->id,
                     $order->reference_number,
-                    \Carbon\Carbon::parse($order->time)->format('Y-m-d h:i:s A'),
+//                    'asc',
                     $order->status,
                     $order->customer_name,
                     $order->vehicle_plate_no,
@@ -398,9 +444,19 @@ class OrderController extends Controller
                     $order->order_logs->where('driver_status', 'driver_assigned')->first()?->logged_at ? \Carbon\Carbon::parse($order->order_logs->where('driver_status', 'driver_assigned')->first()->logged_at)->format('Y-m-d h:i:s A') : '',
                     $order->order_logs->where('driver_status', 'driver_reached_customer')->first()?->logged_at ? \Carbon\Carbon::parse($order->order_logs->where('driver_status', 'driver_reached_customer')->first()->logged_at)->format('Y-m-d h:i:s A') : '',
                     $order->order_logs->where('driver_status', 'driver_drop')->first()?->logged_at ? \Carbon\Carbon::parse($order->order_logs->where('driver_status', 'driver_drop')->first()->logged_at)->format('Y-m-d h:i:s A') : '',
-                    $order->drivers->first()->driver_name ?? '',
-                    $order->drivers->first()->driver_phone ?? '',
+                    $order->drivers->first()?->driver_name ?? '',
+                    $order->drivers->first()?->driver_phone ?? '',
                     $order->estimated_amt,
+                    $order->zone_codes,
+                    $order->vat,
+                    $order->total,
+                    $order->waiting_charge,
+                    $order->reached_cancelled_charge,
+                    $order->vendor_amount,
+                    $order->remarks,
+                    $order->trip_number,
+                    $order->vendor_name,
+                    $order->vendor_amount,
                 ]);
             }
 
@@ -411,6 +467,11 @@ class OrderController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="orders.csv"');
 
         return $response;
+    }
+
+    public function exportToExcel(Request $request)
+    {
+        return Excel::download(new OrdersExport($request), 'orders.xlsx');
     }
 
     private function getOrderFiles($order)
@@ -447,7 +508,7 @@ class OrderController extends Controller
     public function fetchServiceCenters($vehicle_make_id)
     {
         // Assuming you have a ServiceCenter model and it has a vehicle_make_id foreign key
-        $service_centers = ServiceCenter::where('vehicle_make_id', $vehicle_make_id)->get(['id', 'name', 'city']);
+        $service_centers = ServiceCenter::query()->orderByDesc('name')->where('vehicle_make_id', $vehicle_make_id)->get(['id', 'name', 'city']);
 
         return response()->json($service_centers);
     }
@@ -460,3 +521,4 @@ class OrderController extends Controller
 
     }
 }
+

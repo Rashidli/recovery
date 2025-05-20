@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="vehicle_make">Vehicle Make</label>
-                                    <select id="vehicle_make" class="form-control js-example-basic-single"
+                                    <select id="vehicle_make" class="form-control"
                                             name="vehicle_make">
                                         <option value="">Select Make</option>
                                         @foreach($vehicle_makes as $vehicle_make)
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="vehicle_model">Vehicle Model</label>
-                                    <select id="vehicle_model" class="form-control js-example-basic-single"
+                                    <select id="vehicle_model" class="form-control select2"
                                             name="vehicle_model">
                                         <option value="">Select Model</option>
                                     </select>
@@ -90,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="service_category">Service Category</label>
-                                    <select required id="service_category" class="form-control js-example-basic-single"
+                                    <select required id="service_category" class="form-control"
                                             name="service_category">
                                         <option value="">Select Category</option>
                                         @foreach($service_categories as $service_category)
@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="from_city">From City</label>
-                                    <select required id="from_city" class="form-control js-example-basic-single"
+                                    <select required id="from_city" class="form-control"
                                             name="from_city">
                                         <option value="">Select City</option>
                                         @foreach($from_cities as $from_city)
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="from_area">From Area</label>
-                                    <select id="from_area" class="form-control js-example-basic-single"
+                                    <select id="from_area" class="form-control"
                                             name="from_area">
                                         <option value="">Select an area</option>
                                         @if(old('from_area'))
@@ -139,7 +139,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="service_type">Service Type</label>
-                                    <select required id="service_type" class="form-control js-example-basic-single"
+                                    <select required id="service_type" class="form-control"
                                             name="service_type">
                                         <option value="">Select Type</option>
                                         <!-- Service types will be populated dynamically here -->
@@ -148,7 +148,7 @@
                                 <div class="form-group mb-3">
                                     <label for="to_location_details">Drop off Location (Al Futtaim Service centers and
                                         storage locations)</label>
-                                    <select id="to_location_details" class="form-control js-example-basic-single"
+                                    <select id="to_location_details" class="form-control"
                                             name="to_location_details" disabled>
                                         <option value="">Select Location</option>
                                     </select>
@@ -162,7 +162,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="to_area">To Area</label>
-                                    <select id="to_area" class="form-control js-example-basic-single" name="to_area">
+                                    <select id="to_area" class="form-control" name="to_area">
                                         <option value="">Select an Area</option>
                                         @if(old('to_area'))
                                             <option value="{{ old('to_area') }}" selected>{{ old('to_area') }}</option>
@@ -194,6 +194,7 @@
                                         <input id="starting_time" class="form-control" type="datetime-local"
                                                name="starting_time" value="{{ old('starting_time') }}">
                                     </div>
+
 
                                     <div class="form-group mb-3">
                                         <label for="estimated_amt">Estimated Amount</label>
@@ -293,7 +294,9 @@
 
         $('#vehicle_make').on('change', function () {
             var makeId = $(this).find('option:selected').data('id');
-            console.log(makeId);
+            $('#vehicle_model').select2({
+                tags: true // Allow custom tags
+            });
             if (makeId) {
                 $.ajax({
                     url: '/get-vehicle-models/' + makeId,
@@ -306,10 +309,12 @@
                             $('#vehicle_model').append('<option value="' + value.model + '">' + value.model + '</option>');
                         });
                     }
+
                 });
             } else {
                 $('#vehicle_model').empty();
                 $('#vehicle_model').append('<option value="">Select Model</option>');
+
             }
             if (makeId) {
                 $.ajax({

@@ -51,12 +51,12 @@ class Order extends Model
         }
 
         // Əgər driver_logs boşdursa və sifarişin yaradılma tarixindən 45 dəqiqə keçibsə
-        if (!$this->driver_logs()->exists() && $createdAt->diffInMinutes(Carbon::now()) > 45) {
-            return true;
-        }
+//        if (!$this->driver_logs()->exists() && $createdAt->diffInMinutes(Carbon::now()) > 45) {
+//            return true;
+//        }
 
         // Əgər driver_logs boş deyil və onun ilk elementində logged_at ilə yaradılma tarixi arasında 45 dəqiqə fərq varsa
-        $firstLog = $this->driver_logs()->first();
+        $firstLog = $this->order_logs()->where('driver_status','driver_reached_customer')->first();
         if ($firstLog) {
             $loggedAt = Carbon::parse($firstLog->logged_at); // logged_at tarixini Carbon obyektinə çeviririk
             if ($createdAt->diffInMinutes($loggedAt) > 45) {
@@ -75,6 +75,11 @@ class Order extends Model
     private function statusNotCancelled()
     {
         return !in_array($this->status, ['canceled', 'reached_cancelled']);
+    }
+
+    public function getIsAcceptedAttribute()
+    {
+        return $this->order_logs()->where('status', 'accepted')->exists();
     }
 
 }

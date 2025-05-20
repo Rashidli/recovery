@@ -19,14 +19,24 @@
             opacity: 0.5;
         }
     }
+
     @keyframes shine {
-        0% { opacity: 0.5; }
-        50% { opacity: 1; }
-        100% { opacity: 0.5; }
+        0% {
+            opacity: 0.5;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.5;
+        }
     }
 </style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+      crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <div class="main-content" style="margin-left: 0 !important;">
@@ -39,6 +49,28 @@
                             @if(session('message'))
                                 <div class="alert alert-success">{{session('message')}}</div>
                             @endif
+                            @if($isAdmin)
+                                <div class="container">
+                                    <div class="row">
+                                        @foreach($notice_orders as $order)
+                                            <div class="col-md-3">
+                                                <div class="order-item border p-3 rounded shadow-sm">
+                                                    <p><strong>Reference number:</strong> {{ $order->reference_number }}
+                                                    </p>
+                                                    <p><strong>Status:</strong> {{ $order->status }}</p>
+                                                    <p><strong>Created At:</strong> {{ $order->time }}</p>
+
+                                                    <span class="flashing-text"
+                                                          style="display: inline-block; margin-top: 5px; visibility: hidden;">
+                            This order is not completed in 4 hours
+                        </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                             <h4 class="card-title">Orders</h4>
 
                             <!-- Filter Form -->
@@ -101,39 +133,93 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
+                                            <label for="trip_number">Trip number</label>
+                                            <input type="text" id="trip_number" name="trip_number"
+                                                   class="form-control" placeholder="Trip Number"
+                                                   value="{{ request('trip_number') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="reference_number">Driver name</label>
+                                            <input type="text" id="driver_name" name="driver_name"
+                                                   class="form-control" placeholder="Driver Name"
+                                                   value="{{ request('driver_name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
                                             <label for="phone">Phone</label>
                                             <input type="text" id="phone" name="phone" class="form-control"
                                                    placeholder="Phone" value="{{ request('phone') }}">
                                         </div>
                                     </div>
+
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="start_dateInput" class="form-label">Start date</label>
-                                            <div class="input-group" id="start_date" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                                <input id="start_dateInput" type="text" name="start_date" class="form-control" data-td-target="#start_date" value="{{ request()->start_date }}">
-                                                <span class="input-group-text" data-td-target="#start_date" data-td-toggle="datetimepicker">
-                <span class="fas fa-calendar"></span>
-            </span>
+                                            <div class="input-group" id="start_date" data-td-target-input="nearest"
+                                                 data-td-target-toggle="nearest">
+                                                <input id="start_dateInput" type="date" name="start_date"
+                                                       class="form-control" data-td-target="#start_date"
+                                                       value="{{ request()->start_date }}">
+                                                {{--                                                <span class="input-group-text" data-td-target="#start_date"--}}
+                                                {{--                                                      data-td-toggle="datetimepicker">--}}
+                                                {{--                <span class="fas fa-calendar"></span>--}}
+                                                {{--            </span>--}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="end_dateInput" class="form-label">End date</label>
-                                            <div class="input-group" id="end_date" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                                <input id="end_dateInput" type="text" name="end_date" class="form-control" data-td-target="#end_date" value="{{ request()->end_date }}">
-                                                <span class="input-group-text" data-td-target="#end_date" data-td-toggle="datetimepicker">
-                <span class="fas fa-calendar"></span>
-            </span>
+                                            <div class="input-group" id="end_date" data-td-target-input="nearest"
+                                                 data-td-target-toggle="nearest">
+                                                <input id="end_dateInput" type="date" name="end_date"
+                                                       class="form-control" data-td-target="#end_date"
+                                                       value="{{ request()->end_date }}">
+                                                {{--                                                <span class="input-group-text" data-td-target="#end_date"--}}
+                                                {{--                                                      data-td-toggle="datetimepicker">--}}
+                                                {{--                <span class="fas fa-calendar"></span>--}}
+                                                {{--            </span>--}}
                                             </div>
                                         </div>
                                     </div>
+                                    @if($isAdmin)
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="end_dateInput" class="form-label">Vendor driver</label>
+                                                <div class="input-group" id="vendor_name" data-td-target-input="nearest"
+                                                     data-td-target-toggle="nearest">
+                                                    <input id="vendor_nameInput" type="checkbox" name="vendor_name"
+                                                            data-td-target="#vendor_name"
+                                                           @if(request()->vendor_name) checked @endif>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    {{--                                    @if($isAdmin)--}}
+                                    {{--                                        <div class="col-md-2">--}}
+                                    {{--                                            <div class="form-group">--}}
+                                    {{--                                                <label for="phone">Driver type</label>--}}
+                                    {{--                                                <select id="driver_type" name="driver_type" class="form-control">--}}
+                                    {{--                                                    <option value="">Choose</option>--}}
+                                    {{--                                                    <option value="10" {{ request('driver_type') == 'recovery' ? 'selected' : '' }}>Recovery--}}
+                                    {{--                                                    </option>--}}
+                                    {{--                                                    <option value="50" {{ request('driver_type') == 'vendor' ? 'selected' : '' }}>Vendor--}}
+                                    {{--                                                    </option>--}}
+                                    {{--                                                </select>--}}
+                                    {{--                                            </div>--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    @endif--}}
 
                                     <div class="col-md-12 text-right">
                                         <button type="submit" class="btn btn-primary mt-3">Search</button>
                                         <a href="{{route('orders.index')}}" class="btn btn-primary mt-3">Refresh</a>
                                         <a href="{{ route('orders.export.csv', request()->all()) }}"
                                            class="btn btn-success mt-3">Export Orders to CSV</a>
+                                        <a href="{{ route('orders.export.excel', request()->all()) }}"
+                                           class="btn btn-success mt-3">Export Orders to Excel</a>
 
                                     </div>
                                 </div>
@@ -145,9 +231,22 @@
                                            class="btn btn-outline-primary {{ request()->get('date') == today()->toDateString() && !request()->has('status') ? 'active' : '' }}">
                                             {{ $totalOrdersToday }}
                                         </a>
+                                        </a>
                                     </h5>
                                 </div>
                             </div>
+                            @if($isAdmin)
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <h5>Total Vendor orders Today:
+                                            <a href="{{ route('orders.index', ['vendor_name' => true,'date' => today()->toDateString()]) }}"
+                                               class="btn btn-outline-primary {{ request()->has('vendor_name') ? 'active' : '' }}">
+                                                {{ $vendorOrdersToday }}
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="row">
                                 <div class="col-md-2 mb-3">
@@ -266,12 +365,17 @@
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input toggle-column"
                                                        id="column14" data-column="14" checked>
-                                                <label for="column14" class="form-check-label">Vehicle make</label>
+                                                <label for="column14" class="form-check-label">Drop off</label>
                                             </div>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input toggle-column"
                                                        id="column15" data-column="15" checked>
-                                                <label for="column15" class="form-check-label">Vehicle model</label>
+                                                <label for="column15" class="form-check-label">Vehicle make</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input toggle-column"
+                                                       id="column16" data-column="16" checked>
+                                                <label for="column16" class="form-check-label">Vehicle model</label>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -304,6 +408,7 @@
                                         <th>Status</th>
                                         <th>Pick up</th>
                                         <th>To area</th>
+                                        <th>Drop off</th>
                                         <th>Vehicle make</th>
                                         <th>Vehicle model</th>
                                         @can('delete-orders')
@@ -333,12 +438,21 @@
                                             <td>
                                                 {{ $order->customer_name }}
                                                 @if($isAdmin)
+                                                    @if($order->is_accepted)
+                                                        <i class="fa fa-star text-success"
+                                                           style="animation: shine 2s infinite;"></i> {{-- Green star --}}
+                                                    @else
+                                                        <i class="fa fa-star text-secondary"></i> {{-- Grey star --}}
+                                                    @endif
+
                                                     @if($order->is_pending_driver_assignment)
                                                         <!-- Shining star göstər -->
-                                                        <i class="fa fa-star text-warning" style="animation: shine 2s infinite;"></i>
+                                                        <i class="fa fa-star text-danger"
+                                                           style="animation: shine 2s infinite;"></i>
                                                     @else
                                                         <!-- Adi star göstər -->
-                                                        <i class="fa fa-star text-muted"></i>
+                                                        <i class="fa fa-star text-success"
+                                                           style="animation: shine 2s infinite;"></i>
                                                     @endif
                                                 @endif
                                             </td>
@@ -372,6 +486,7 @@
                                             </td>
                                             <td style="max-width: 200px; text-wrap: wrap">{{$order->from_location_details}}</td>
                                             <td style="max-width: 200px; text-wrap: wrap">{{$order->to_area}}</td>
+                                            <td style="max-width: 200px; text-wrap: wrap">{{$order->to_location_details}}</td>
                                             <td>{{$order->vehicle_make}}</td>
                                             <td>{{$order->vehicle_model}}</td>
                                             @can('delete-orders')
@@ -412,33 +527,60 @@
 
 @include('admin.includes.footer')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        crossorigin="anonymous"></script>
 <!-- Tempus Dominus JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>--}}
 
 <!-- Tempus Dominus Styles -->
 
 <script>
-    // Initialize the start date picker
-    const startDatePicker = new tempusDominus.TempusDominus(document.getElementById('start_date'), {
-        localization: {
-            hourCycle: 'h24',  // Enforces 24-hour format
-            format: 'MM/dd/yyyy HH:mm'
-        },
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select all orders
+        const orders = document.querySelectorAll('.order-item');
+        orders.forEach(order => {
+            const createdAt = order.querySelector('p:nth-child(3)').innerText.split(': ')[1]; // Extract created_at time
+            const status = order.querySelector('p:nth-child(2)').innerText.split(': ')[1]; // Extract status
+            const flashText = order.querySelector('.flashing-text');
 
+            const createdTime = new Date(createdAt);
+            const currentTime = new Date();
+            const timeDiffInHours = (currentTime - createdTime) / (1000 * 60 * 60); // Time difference in hours
+
+            if (status !== 'completed' && timeDiffInHours > 3) {
+                flashText.style.visibility = 'visible'; // Show the flashing text if conditions are met
+                setInterval(function () {
+                    flashText.style.color = flashText.style.color === 'red' ? 'transparent' : 'red';
+                }, 500); // Make the text flash every 0.5 seconds
+            }
+        });
     });
+    // Initialize the start date picker
+    // const startDatePicker = new tempusDominus.TempusDominus(document.getElementById('start_date'), {
+    //     localization: {
+    //         hourCycle: 'h24',  // Enforces 24-hour format
+    //         format: 'MM/dd/yyyy HH:mm'
+    //     },
+    //
+    // });
 
     // Initialize the end date picker
-    const endDatePicker = new tempusDominus.TempusDominus(document.getElementById('end_date'), {
-        localization: {
-            hourCycle: 'h24',  // Enforces 24-hour format
-            format: 'MM/dd/yyyy HH:mm'
-        },
-
-    });
+    // const endDatePicker = new tempusDominus.TempusDominus(document.getElementById('end_date'), {
+    //     localization: {
+    //         hourCycle: 'h24',  // Enforces 24-hour format
+    //         format: 'MM/dd/yyyy HH:mm'
+    //     },
+    //
+    // });
 
     // Hər 5 saniyədən bir səhifəni yeniləmək
     setInterval(function () {

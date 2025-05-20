@@ -10,10 +10,12 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DriverListController;
 use App\Http\Controllers\FromCityController;
 use App\Http\Controllers\ServiceCategoryController;
 use App\Http\Controllers\VehicleMakeController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\ZoneCodeController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -43,7 +45,8 @@ Route::group(['middleware' =>'auth'], function (){
     Route::get('/get-service-types/{categoryId}', [ServiceCategoryController::class,'getServiceTypes']);
     Route::get('/get-areas/{cityId}', [FromCityController::class, 'getAreas']);
     Route::get('/fetch-service-centers/{vehicle_make_id}', [OrderController::class, 'fetchServiceCenters']);
-
+    Route::get('chart', [ReportController::class,'getOrderStats'])->name('getOrderStats');
+    Route::get('driver_chart', [ReportController::class,'reportDriverStats'])->name('reportDriverStats');
 
     Route::get('/home', [PageController::class,'home'])->name('home');
     Route::get('/logout',[AuthController::class,'logout'])->name('logout');
@@ -56,8 +59,11 @@ Route::group(['middleware' =>'auth'], function (){
     Route::resource('orders',OrderController::class);
     Route::resource('reports',ReportController::class);
     Route::resource('vendors',VendorController::class);
+    Route::resource('driver_lists',DriverListController::class);
+    Route::resource('zone_codes',ZoneCodeController::class);
     Route::get('change.status/{order}', [OrderController::class,'change_status'])->name('change.status');
     Route::get('orders/export/csv', [OrderController::class, 'exportToCSV'])->name('orders.export.csv');
+    Route::get('orders/export/excel', [OrderController::class, 'exportToExcel'])->name('orders.export.excel');
     Route::resource('logs', LogController::class)->only(['store', 'update', 'destroy', 'edit']);
     Route::get('/delete-slider-image/{id}', [OrderController::class, 'deleteImage'])
         ->name('delete-slider-image');

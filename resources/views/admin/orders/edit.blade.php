@@ -3,18 +3,24 @@
     input, select, textarea, .select2-container--default .select2-selection, tr, td, th {
         font-weight: bold !important;
     }
+
     label {
         font-weight: bold !important;
     }
+
     .select2-container--default .select2-selection--single {
         font-weight: bold !important;
     }
+
     .select2-container--default .select2-results__option {
         font-weight: bold !important;
     }
 </style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+      crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <div class="main-content" style="margin-left: 0 !important;">
     <div class="page-content">
@@ -59,7 +65,7 @@
                                 <div class="form-group mb-3">
                                     <label for="vehicle_make">Vehicle Make</label>
                                     <select id="vehicle_make"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="vehicle_make">
                                         <option value="">Select Make</option>
                                         @foreach($vehicle_makes as $vehicle_make)
@@ -99,7 +105,7 @@
                                 <div class="form-group mb-3">
                                     <label for="vehicle_model">Vehicle Model</label>
                                     <select id="vehicle_model"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="vehicle_model">
                                         @if($order->vehicle_model)
                                             <option value="{{ $order->vehicle_model }}"
@@ -122,7 +128,7 @@
                                 <div class="form-group mb-3">
                                     <label for="service_category">Service Category</label>
                                     <select id="service_category"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="service_category">
                                         <option value="">Select Category</option>
                                         @foreach($service_categories as $service_category)
@@ -137,7 +143,7 @@
                                 <div class="form-group mb-3">
                                     <label for="from_city">From City</label>
                                     <select id="from_city"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="from_city">
                                         <option value="">Select City</option>
                                         @foreach($from_cities as $from_city)
@@ -149,7 +155,8 @@
 
                                         <!-- Add the $order->from_city if it doesn't exist in the $from_cities -->
                                         @if ($order->from_city && !in_array($order->from_city, $from_cities->pluck('name')->toArray()))
-                                            <option value="{{ $order->from_city }}" selected>{{ $order->from_city }}</option>
+                                            <option value="{{ $order->from_city }}"
+                                                    selected>{{ $order->from_city }}</option>
                                         @endif
                                     </select>
 
@@ -159,7 +166,7 @@
                                 <div class="form-group mb-3">
                                     <label for="from_area">From Area</label>
                                     <select id="from_area"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="from_area">
                                         <option value="">Select an area</option>
                                         @if($order->from_area)
@@ -190,7 +197,7 @@
                                 <div class="form-group mb-3">
                                     <label for="service_type">Service Type</label>
                                     <select id="service_type"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="service_type">
                                         @if($order->service_type)
                                             <option value="{{ $order->service_type }}"
@@ -203,7 +210,7 @@
                                 <div class="form-group mb-3">
                                     <label for="to_city">To city</label>
                                     <select id="to_city"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="to_city">
                                         <option value="">Select City</option>
                                         @foreach($from_cities as $from_city)
@@ -215,7 +222,8 @@
 
                                         <!-- Add the $order->to_city if it doesn't exist in the $from_cities -->
                                         @if ($order->to_city && !in_array($order->to_city, $from_cities->pluck('name')->toArray()))
-                                            <option value="{{ $order->to_city }}" selected>{{ $order->to_city }}</option>
+                                            <option value="{{ $order->to_city }}"
+                                                    selected>{{ $order->to_city }}</option>
                                         @endif
                                     </select>
 
@@ -223,7 +231,7 @@
                                 <div class="form-group mb-3">
                                     <label for="to_area">To area</label>
                                     <select id="to_area"
-                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control js-example-basic-single"
+                                            {{ $isAdmin || !$hasDriver ? '' : 'disabled' }} class="form-control"
                                             name="to_area">
                                         <option value="">Select an area</option>
                                         @if($order->to_area)
@@ -260,43 +268,113 @@
                                            {{ $isAdmin ? '' : 'disabled' }} type="text" name="trip_number"
                                            value="{{ old('trip_number', $order->trip_number) }}">
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="estimated_amt">Estimated Amount</label>
+                                            <input id="estimated_amt" class="form-control" type="text"
+                                                   name="estimated_amt"
+                                                   value="{{ old('estimated_amt', $order->estimated_amt) }}"
+                                                {{ ($isSiddiq || $isFatime || is_null($order->estimated_amt)) ? '' : 'disabled' }}>
+                                            @if (!($isSiddiq || $isFatime || is_null($order->estimated_amt)))
+                                                <small class="text-muted">You do not have permission to edit this field.</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="vat">VAT</label>
+                                            <input id="vat" class="form-control" type="text"
+                                                   name="vat"
+                                                   value="{{ old('vat', $order->vat) }}"
+                                                {{ ($isSiddiq || $isFatime || is_null($order->vat)) ? '' : 'disabled' }}>
+                                            @if($errors->first('vat'))
+                                                <small class="form-text text-danger">{{ $errors->first('vat') }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="total">Total</label>
+                                            <input id="total" class="form-control" type="text"
+                                                   name="total"
+                                                   value="{{ old('total', $order->total) }}"
+                                                {{ ($isSiddiq || $isFatime || is_null($order->total)) ? '' : 'disabled' }}>
+                                            @if($errors->first('total'))
+                                                <small class="form-text text-danger">{{ $errors->first('total') }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
 
+
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="vendor_amount">Waiting charge</label>
+                                            <input id="vendor_amount" class="form-control" type="text"
+                                                   name="waiting_charge"
+                                                   value="{{ old('waiting_charge', $order->waiting_charge) }}" {{ $isAdmin ? '' : 'disabled' }}>
+                                            @if($errors->first('waiting_charge'))
+                                                <small
+                                                    class="form-text text-danger">{{ $errors->first('waiting_charge') }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="vendor_amount">Reached and cancelled</label>
+                                            <input id="vendor_amount" class="form-control" type="text"
+                                                   name="reached_cancelled_charge"
+                                                   value="{{ old('reached_cancelled_charge', $order->reached_cancelled_charge) }}" {{ $isAdmin ? '' : 'disabled' }}>
+                                            @if($errors->first('reached_cancelled_charge'))
+                                                <small
+                                                    class="form-text text-danger">{{ $errors->first('reached_cancelled_charge') }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group mb-3">
-                                    <label for="estimated_amt">Estimated Amount</label>
-                                    <input id="estimated_amt" class="form-control" type="text" name="estimated_amt"
-                                           value="{{ old('estimated_amt', $order->estimated_amt) }}" {{ $isAdmin ? '' : 'disabled' }}>
-                                    @if (!$isAdmin)
-                                        <small class="text-muted">You do not have permission to edit this field.</small>
-                                    @endif
+                                    <label for="remarks">Remarks</label>
+                                    <textarea id="remarks"
+                                              {{ $isAdmin ? '' : 'disabled' }} class="form-control"
+                                              name="remarks">{{ old('remarks', $order->remarks) }}</textarea>
                                 </div>
                                 @if($isAdmin)
                                     <div class="form-group mb-3">
                                         <label for="vendor_amount">Vendor Amount</label>
                                         <input id="vendor_amount" class="form-control" type="text" name="vendor_amount"
                                                value="{{ old('vendor_amount', $order->vendor_amount) }}" {{ $isAdmin ? '' : 'disabled' }}>
-                                        @if($errors->first('vendor_amount')) <small class="form-text text-danger">{{ $errors->first('vendor_amount') }}</small> @endif
+                                        @if($errors->first('vendor_amount'))
+                                            <small
+                                                class="form-text text-danger">{{ $errors->first('vendor_amount') }}</small>
+                                        @endif
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="driver_status">Vendor name</label>
                                         <select class="form-control" id="vendor_name" name="vendor_name">
                                             <option value="">Select</option>
                                             @foreach($vendors as $vendor)
-                                                <option value="{{$vendor->title}}" {{ $order->vendor_name == $vendor->title ? 'selected' : '' }}>{{$vendor->title}}</option>
+                                                <option
+                                                    value="{{$vendor->title}}" {{ $order->vendor_name == $vendor->title ? 'selected' : '' }}>{{$vendor->title}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 @endif
-                                <div class="form-group mb-3">
-                                    <label for="vendor_amount">Waiting charge</label>
-                                    <input id="vendor_amount" class="form-control" type="text" name="waiting_charge"
-                                           value="{{ old('waiting_charge', $order->waiting_charge) }}" {{ $isAdmin ? '' : 'disabled' }}>
-                                    @if($errors->first('waiting_charge')) <small class="form-text text-danger">{{ $errors->first('waiting_charge') }}</small> @endif
-                                </div>
+
 
                                 <div class="form-group mb-3">
-                                    <label for="zone_codes">zone codes</label>
-                                    <input id="zone_codes" class="form-control" type="text" name="zone_codes"
-                                           value="{{ old('zone_codes', $order->zone_codes) }}">
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label for="zone_codes">Zone codes</label>
+                                            <select id="zone_code" style="width: 100% !important;"
+                                                    class="form-control js-example-basic-single" name="zone_codes">
+                                                <option value="">Choose</option>
+                                                @foreach($zone_codes as $zone_code)
+                                                    <option data-price="{{$zone_code->price}}"
+                                                            value="{{$zone_code->zone_code}}" {{$order->zone_codes == $zone_code->zone_code ? 'selected' : ''}}>{{$zone_code->zone_code}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                     {{--                                    @if (!$isAdmin)--}}
                                     {{--                                        <small class="text-muted">You do not have permission to edit this field.</small>--}}
                                     {{--                                    @endif--}}
@@ -314,7 +392,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="status">Status</label>
-                                    <select class="form-control js-example-basic-single"
+                                    <select class="form-control"
                                             {{ $isAdmin ? '' : 'disabled' }} name="status">
                                         <option
                                             value="new" {{ old('status', $order->status) == 'new' ? 'selected' : '' }}>
@@ -349,9 +427,11 @@
                                 </div>
                                 <div class="form-group mb-3 d-flex flex-wrap">
                                     @foreach($order->images ?? [] as $image)
-                                        <div class="image-container position-relative m-2" >
-                                            <a href="{{ asset('storage/' . $image->order_file) }}" target="_blank" class="d-block">
-                                                <img class="img-thumbnail" style="width: 100px; height: 100px;" src="{{ asset('storage/' . $image->order_file) }}" alt="">
+                                        <div class="image-container position-relative m-2">
+                                            <a href="{{ asset('storage/' . $image->order_file) }}" target="_blank"
+                                               class="d-block">
+                                                <img class="img-thumbnail" style="width: 100px; height: 100px;"
+                                                     src="{{ asset('storage/' . $image->order_file) }}" alt="">
                                             </a>
                                             <a href="{{ route('delete-slider-image', ['id' => $image->id]) }}"
                                                class="btn btn-danger btn-sm delete-btn position-absolute"
@@ -372,15 +452,31 @@
                             @foreach($order->drivers as $driver)
                                 <div class="row">
                                     <!-- Column 1: Driver Fullname -->
+                                    <!-- Column 1: Driver Fullname (Updated with Select Dropdown) -->
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
                                             <label for="driver_name_{{ $loop->index }}">Driver Fullname</label>
                                             <input type="hidden" name="drivers[{{ $loop->index }}][driver_id]"
                                                    value="{{ old('drivers.'.$loop->index.'.id', $driver->id) }}">
-                                            <input id="driver_name_{{ $loop->index }}"
-                                                   {{ $isAdmin ? '' : 'disabled' }} class="form-control" type="text"
-                                                   name="drivers[{{ $loop->index }}][driver_name]"
-                                                   value="{{ old('drivers.'.$loop->index.'.driver_name', $driver->driver_name) }}">
+                                            <select id="driver_name_{{ $loop->index }}"
+                                                    class="form-control js-example-basic-single"
+                                                    name="drivers[{{ $loop->index }}][driver_name]"
+                                                {{ $isAdmin ? '' : 'disabled' }}>
+                                                <option value="">Choose</option>
+                                                @foreach($driver_lists as $driver_list)
+                                                    <option data-driver_phone="{{ $driver_list->phone }}"
+                                                            data-driver_car_number="{{ $driver_list->plate_no }}"
+                                                            value="{{ $driver_list->title }}"
+                                                        {{ old('drivers.'.$loop->index.'.driver_name', $driver->driver_name) == $driver_list->title ? 'selected' : '' }}>
+                                                        {{ $driver_list->title }}
+                                                    </option>
+                                                @endforeach
+                                                @if(!empty($driver->driver_name) && !in_array($driver->driver_name, $driver_lists->pluck('title')->toArray()))
+                                                    <option value="{{ $driver->driver_name }}"
+                                                            selected>{{ $driver->driver_name }}</option>
+                                                @endif
+                                            </select>
+
                                         </div>
                                     </div>
 
@@ -406,31 +502,6 @@
                                         </div>
                                     </div>
 
-                                    {{--                                    <!-- Column 4: Google Map Link -->--}}
-                                    {{--                                    <div class="col-md-2">--}}
-                                    {{--                                        <div class="form-group mb-3">--}}
-                                    {{--                                            <label for="google_map_{{ $loop->index }}">Google Map Link</label>--}}
-                                    {{--                                            @if($driver->google_map)--}}
-                                    {{--                                                <a href="{{$driver->google_map}}" target="_blank">See map</a>--}}
-                                    {{--                                            @endif--}}
-                                    {{--                                            <input id="google_map_{{ $loop->index }}"--}}
-                                    {{--                                                   {{ $isAdmin ? '' : 'disabled' }} class="form-control" type="text"--}}
-                                    {{--                                                   name="drivers[{{ $loop->index }}][google_map]"--}}
-                                    {{--                                                   value="{{ old('drivers.'.$loop->index.'.google_map', $driver->google_map) }}">--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
-
-                                    {{--                                    <!-- Column 5: Driver Apply Time -->--}}
-                                    {{--                                    <div class="col-md-2">--}}
-                                    {{--                                        <div class="form-group mb-3">--}}
-                                    {{--                                            <label for="driver_apply_time_{{ $loop->index }}">Time</label>--}}
-                                    {{--                                            <input id="driver_apply_time_{{ $loop->index }}"--}}
-                                    {{--                                                   {{ $isAdmin ? '' : 'disabled' }} class="form-control"--}}
-                                    {{--                                                   type="date"--}}
-                                    {{--                                                   name="drivers[{{ $loop->index }}][driver_apply_time]"--}}
-                                    {{--                                                   value="{{ old('drivers.'.$loop->index.'.driver_apply_time', $driver->driver_apply_time) }}">--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
                                 </div>
                             @endforeach
                         @endif
@@ -484,9 +555,16 @@
                                         <div class="form-group mb-3">
                                             <label for="driver_name_new">Driver Fullname</label>
                                             <input type="hidden" name="drivers[new][driver_id]">
-                                            <input id="driver_name_new" class="form-control" type="text"
-                                                   name="drivers[new][driver_name]"
-                                                   value="{{ old('drivers.new.driver_name') }}">
+                                            <select id="driver_name_new" style="width: 100% !important;"
+                                                    class="form-control js-example-basic-single"
+                                                    name="drivers[new][driver_name]">
+                                                <option value="">Choose</option>
+                                                @foreach($driver_lists as $driver_list)
+                                                    <option data-driver_phone="{{$driver_list->phone}}"
+                                                            data-driver_car_number="{{$driver_list->plate_no}}"
+                                                            value="{{$driver_list->title}}">{{$driver_list->title}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
 
@@ -509,26 +587,6 @@
                                                    value="{{ old('drivers.new.driver_phone') }}">
                                         </div>
                                     </div>
-
-                                    {{--                                    <!-- Column 4: Google Map Link -->--}}
-                                    {{--                                    <div class="col-md-2">--}}
-                                    {{--                                        <div class="form-group mb-3">--}}
-                                    {{--                                            <label for="google_map_new">Google Map Link</label>--}}
-                                    {{--                                            <input id="google_map_new" class="form-control" type="text"--}}
-                                    {{--                                                   name="drivers[new][google_map]"--}}
-                                    {{--                                                   value="{{ old('drivers.new.google_map') }}">--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
-
-                                    {{--                                    <!-- Column 5: Driver Apply Time -->--}}
-                                    {{--                                    <div class="col-md-2">--}}
-                                    {{--                                        <div class="form-group mb-3">--}}
-                                    {{--                                            <label for="driver_apply_time_new">Time</label>--}}
-                                    {{--                                            <input id="driver_apply_time_new" class="form-control" type="date"--}}
-                                    {{--                                                   name="drivers[new][driver_apply_time]"--}}
-                                    {{--                                                   value="{{ old('drivers.new.driver_apply_time') }}">--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
                                 </div>
                             </div>
                         @endif
@@ -654,8 +712,10 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="logged_atInput" class="form-label">Logged At</label>
-                        <div class="input-group" id="logged_at" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                            <input id="logged_atInput" type="text" name="logged_at" class="form-control" data-td-target="#logged_at" value="">
+                        <div class="input-group" id="logged_at" data-td-target-input="nearest"
+                             data-td-target-toggle="nearest">
+                            <input id="logged_atInput" type="text" name="logged_at" class="form-control"
+                                   data-td-target="#logged_at" value="">
                             <span class="input-group-text" data-td-target="#logged_at" data-td-toggle="datetimepicker">
                 <span class="fas fa-calendar"></span>
             </span>
@@ -672,20 +732,110 @@
 </div>
 
 @include('admin.includes.footer')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-<!-- Tempus Dominus JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>
+
 <script>
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2({
+            tags: true
+        });
+    })
     const loggedAtPicker = new tempusDominus.TempusDominus(document.getElementById('logged_at'), {
         localization: {
             hourCycle: 'h24',
             format: 'MM/dd/yyyy HH:mm'
         },
     });
+    $(document).ready(function () {
+        // Trigger calculation on page load if a value is present
+        // if ($('#estimated_amt').val()) {
+        //     calculateVatAndTotal();
+        // }
+
+        // Listen for changes to the zone codes dropdown
+        $('#zone_code').on('change', function () {
+            updateEstimatedAmt();
+            calculateVatAndTotal();
+        });
+
+        // Listen for manual changes to the estimated_amt input
+        $('#estimated_amt').on('input', function () {
+            calculateVatAndTotal();
+        });
+
+        // Function to update the estimated_amt input field based on zone code
+        function updateEstimatedAmt() {
+            var selectedOption = $('#zone_code option:selected');
+            var price = selectedOption.data('price'); // Get the price from the selected option
+            $('#estimated_amt').val(price); // Update the estimated_amt input field with the price
+        }
+
+        // Function to calculate VAT and total
+        function calculateVatAndTotal() {
+            var estimatedAmt = parseFloat($('#estimated_amt').val()) || 0; // Get estimated_amt value (default to 0 if empty or invalid)
+            var vat = estimatedAmt * 0.05; // Calculate 5% VAT
+            var total = estimatedAmt + vat; // Calculate total
+
+            $('#vat').val(vat.toFixed(2)); // Update VAT field with formatted value
+            $('#total').val(total.toFixed(2)); // Update Total field with formatted value
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const carNumberInput = document.getElementById('driver_car_number_new');
+        const phoneInput = document.getElementById('driver_phone_new');
+
+        // Initialize Select2
+        $('#driver_name_new').select2({
+            width: '100%'
+        });
+
+        // Use jQuery to listen for Select2's change event
+        $('#driver_name_new').on('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+
+            // Retrieve the data attributes from the selected option
+            const driverCarNumber = selectedOption.getAttribute('data-driver_car_number') || '';
+            const driverPhone = selectedOption.getAttribute('data-driver_phone') || '';
+
+            // Update the input fields
+            if (carNumberInput) carNumberInput.value = driverCarNumber;
+            if (phoneInput) phoneInput.value = driverPhone;
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select all select elements with IDs starting with "driver_name_"
+        const driverSelects = document.querySelectorAll('select[id^="driver_name_"]');
+
+        driverSelects.forEach((driverSelect) => {
+            // Initialize Select2 for each select element
+            $(driverSelect).select2({
+                width: '100%' // Ensures full-width dropdown
+            });
+
+            // Add a change event listener
+            $(driverSelect).on('change', function () {
+                // Extract the index from the select element's ID
+                const index = driverSelect.id.split('_').pop();
+
+                // Find corresponding input fields for car number and phone
+                const carNumberInput = document.getElementById(`driver_car_number_${index}`);
+                const phoneInput = document.getElementById(`driver_phone_${index}`);
+
+                // Get the selected option
+                const selectedOption = driverSelect.options[driverSelect.selectedIndex];
+
+                // Retrieve the data attributes from the selected option
+                const driverCarNumber = selectedOption.getAttribute('data-driver_car_number') || '';
+                const driverPhone = selectedOption.getAttribute('data-driver_phone') || '';
+
+                // Update the input fields
+                if (carNumberInput) carNumberInput.value = driverCarNumber;
+                if (phoneInput) phoneInput.value = driverPhone;
+            });
+        });
+    });
+
     $(document).ready(function () {
         $('#add-driver-btn').on('click', function (e) {
             e.preventDefault(); // Prevent the default button action
